@@ -1,4 +1,4 @@
-public class Car:IVehicle
+public class Car : IVehicle
 {
     public string GetImagePath()
     {

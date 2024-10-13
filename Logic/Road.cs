@@ -7,14 +7,14 @@ public class Road : IRoad
     {
         RowCount = row;
         ColCount = col;
-        vehicles = new IVehicle[RowCount,ColCount];
+        vehicles = new IVehicle[RowCount, ColCount];
     }
     public void SetVehicle(int row, int column, IVehicle vehicle)
     {
-        vehicles[row,column] = vehicle;
+        vehicles[row, column] = vehicle;
     }
     public IVehicle? GetVehicle(int row, int column)
     {
-        return vehicles[row,column];
+        return vehicles[row, column];
     }
 }
