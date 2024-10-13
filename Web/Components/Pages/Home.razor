@@ -8,3 +8,98 @@
 <br>
 <br>
 <br>
+<div>@errors</div>
+
+@if (Road == null)
+{
+    <input placeholder="Rows" type="text" @bind=userRows>
+    <div></div>
+    <input placeholder="Columns" type="text" @bind=userCols>
+    <div></div>
+    <button @onclick=@(() => CreateRoad())>Create Road</button>
+    <div></div>
+}
+else
+{
+    <table>
+        @for (int i = 0; i < Road.RowCount; i++)
+        {
+            <tr>
+                @for (int j = 0; j < Road.ColCount; j++)
+                {
+                    <td>
+                        @if (Road.GetVehicle(i, j) != null)
+                        {
+                            <img src=@Road.GetVehicle(i, j)?.GetImagePath() height="100" />
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    <div>
+        Set a Car
+
+        <div>
+            row: <input @bind=vehicleRowInput />
+        </div>
+        <div>
+            column: <input @bind=vehicleColumnInput />
+        </div>
+        <button @onclick=@(() => SetVehicle("Car"))>Set Car</button>
+        <button @onclick=@(() => SetVehicle("Bus"))>Set Bus</button>
+        <button @onclick=@(() => SetVehicle("FireTruck"))>Set FireTruck</button>
+        <button @onclick=@(() => SetVehicle("Taxi"))>Set Taxi</button>
+    </div>
+}
+
+@code {
+    string userRows;
+    string userCols;
+    string errors;
+    string vehicleRowInput;
+    string vehicleColumnInput;
+    IRoad Road = null;
+
+    public void CreateRoad()
+    {
+        if (int.TryParse(userRows, out int rows) && int.TryParse(userCols, out int cols))
+        {
+            Road = new Road(rows, cols);
+            errors = "";
+        }
+        else
+        {
+            userRows = "";
+            userCols = "";
+            errors = "Inputs for Road size couldn't be parsed";
+        }
+    }
+    public void SetVehicle(string vehicle)
+    {
+        if (int.TryParse(vehicleRowInput, out int vRows) && int.TryParse(vehicleColumnInput, out int vCols))
+        {
+            try
+            {
+                IVehicle newVehicle = vehicle switch
+                {
+                    "Car" => new Car(),
+                    "Bus" => new Bus(),
+                    "FireTruck" => new FireTruck(),
+                    "Taxi" => new Taxi(),
+                };
+                Road.SetVehicle(vRows, vCols, newVehicle);
+                errors = "";
+            }
+            catch{
+                errors = "Vehicle index is outside of range";
+            }
+}
+        else
+        {
+            vehicleRowInput = "";
+            vehicleColumnInput = "";
+            errors = "Inputs for vehicle position size couldn't be parsed";
+        }
+    }
+}
